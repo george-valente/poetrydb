@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 
 function App() {
+
+  interface RandomPoetry{
+    title: string; 
+    author: string; 
+    lines: string[]; 
+    linecount: number; 
+  }
+
   const [authors, setAuthors] = useState([]);
-  const [randomPoetry, setRandomPoetry] = useState<any>(null); 
+  const [randomPoetry, setRandomPoetry] = useState<RandomPoetry | null>(null); 
 
 
   const getAuthors = async () => {
@@ -32,6 +40,8 @@ function App() {
     }
   }
 
+  
+
   useEffect(() => {
     getRandomPoetry(); 
     console.log(randomPoetry)
@@ -46,13 +56,13 @@ function App() {
         <p className = "text-center  text-gray-500">“We don't read and write poetry because it's cute. We read and write poetry because we are members of the human race. And the human race is filled with passion"</p>
       </div>
       <div className = "my-5">
-        <h2 className = "text-center my-5">A random Poetry for your pleasure.</h2>
+        <h2 className = "text-center my-3">A random Poetry for your pleasure.</h2>
         {randomPoetry ? (
-          <div className = "flex justify-center flex-col items-center">
-            <h3 className = "text-center font-bold text-amber-800 ">{randomPoetry.title}</h3>
+          <div className = "flex justify-center flex-col items-center px-6">
+            <h3 className = "font-stix text-center font-bold text-amber-800 text-2xl py-2">{randomPoetry.title}</h3>
             <div className="font-stix">
-              {randomPoetry.lines.map((line: string) => (
-                <p className = "font-medium text-start items-start">{line}</p>
+              {randomPoetry.lines.map((line, index) => (
+                <p key = {index} className = "font-medium text-start items-start text-lg leading-8">{line}</p>
               ))}
             </div>
           </div>
