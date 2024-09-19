@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 
 function App() {
 
+  const alphabet = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+  ];
+  
   interface RandomPoetry{
     title: string; 
     author: string; 
@@ -9,8 +14,10 @@ function App() {
     linecount: number; 
   }
 
-  const [authors, setAuthors] = useState([]);
+  const [authors, setAuthors] = useState<string[]>([]);
+  const [filteredAuthors, setFilteredAuthors] = useState<string[]>([]); 
   const [randomPoetry, setRandomPoetry] = useState<RandomPoetry | null>(null); 
+
 
 
   const getAuthors = async () => {
@@ -29,9 +36,9 @@ function App() {
 
   },[])
 
-  const getRandomPoetry = async () => {
+  const getRandomPoetry = async () => { 
     try{
-      const res = await fetch('https://poetrydb.org/random');
+      const res = await fetch('https://poetrydb.org/random/10');
       const data = await res.json(); 
 
       setRandomPoetry(data[0]);
@@ -40,11 +47,23 @@ function App() {
     }
   }
 
+  const getSelectedLetter = (letter: string) => {
+    if(!authors || authors.length === 0){
+      console.log("authors not loaded yet"); 
+      return; 
+    }
+
+    let authorsWithLetter = authors.filter((author) => 
+      author.startsWith(letter)
+  );
+    setFilteredAuthors(authorsWithLetter); 
+
+  }
+
   
 
   useEffect(() => {
     getRandomPoetry(); 
-    console.log(randomPoetry)
 
   },[])
   
@@ -55,7 +74,7 @@ function App() {
         <h1 className = "text-3xl font-extrabold  my-3">Poetry of The Day</h1>
         <p className = "text-center  text-gray-500">“We don't read and write poetry because it's cute. We read and write poetry because we are members of the human race. And the human race is filled with passion"</p>
       </div>
-      <div className = "my-5">
+      {/* <div className = "my-5">
         <h2 className = "text-center my-3">A random Poetry for your pleasure.</h2>
         {randomPoetry ? (
           <div className = "flex justify-center flex-col items-center px-6">
@@ -70,19 +89,30 @@ function App() {
           <p></p>
         )
         }
+      </div> */}
+
+      <div>
+        <h2 className = "text-center my-2">Authors</h2>
+        <ul className = "flex flex-wrap justify-center gap-2">
+          {alphabet.map((letter, index) => (
+            <li key = {index}>
+              <div className = "bg-slate-500 py-2 mx-2 cursor-pointer rounded-xl w-16 flex justify-center hover:brightness-75 transition">
+              <span 
+              onClick = {() => getSelectedLetter(letter)}
+              className = "py-2 mx-2 text-lg text-slate-50">{letter}</span>
+            </div>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* <div>
-        <h2 className = "text-center my-2">Authors</h2>
+      <div>
         <ul>
-        {authors && authors.map((author) => (
-          <li>
-            <a href="">{author}</a>
-          </li>
+        {filteredAuthors && filteredAuthors.map((author, index) => (
+          <li key = {index}>{author}</li>
         ))}
-
         </ul>
-      </div> */}
+      </div>
     </div>
   )
 }
