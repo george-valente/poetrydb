@@ -7,7 +7,12 @@ import{
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom"; 
+
 import { Header } from './components/Header.tsx';
+import { Alphabet } from './components/Alphabet.tsx';
+import { RandomPoetry } from './components/RandomPoetry.tsx';
+import { PoemsByAuthor } from './components/PoemsByAuthor.tsx';
+import { Poetry } from './components/Poetry.tsx';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +24,22 @@ const router = createBrowserRouter([
         path: '/',
         element: <App/>
       },
+      {
+        path: '/authors',
+        element: <Alphabet/>
+      },
+      {
+        path: '/random-poetry',
+        element: <RandomPoetry/>
+      },
+      {
+        path: '/author/:authorName/title',
+        element: <PoemsByAuthor/>
+      },
+      {
+        path: '/title/:poemTitle',
+        element: <Poetry/>
+      }
     ]
   },
 ]);
